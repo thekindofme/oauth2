@@ -51,7 +51,7 @@ type Token struct {
 
 	// raw optionally contains extra metadata from the server
 	// when updating a token.
-	raw interface{}
+	Raw interface{}
 }
 
 // Type returns t.TokenType if non-empty, else "Bearer".
@@ -86,7 +86,7 @@ func (t *Token) SetAuthHeader(r *http.Request) {
 func (t *Token) WithExtra(extra interface{}) *Token {
 	t2 := new(Token)
 	*t2 = *t
-	t2.raw = extra
+	t2.Raw = extra
 	return t2
 }
 
@@ -94,11 +94,11 @@ func (t *Token) WithExtra(extra interface{}) *Token {
 // Extra fields are key-value pairs returned by the server as a
 // part of the token retrieval response.
 func (t *Token) Extra(key string) interface{} {
-	if raw, ok := t.raw.(map[string]interface{}); ok {
+	if raw, ok := t.Raw.(map[string]interface{}); ok {
 		return raw[key]
 	}
 
-	vals, ok := t.raw.(url.Values)
+	vals, ok := t.Raw.(url.Values)
 	if !ok {
 		return nil
 	}
@@ -146,7 +146,7 @@ func tokenFromInternal(t *internal.Token) *Token {
 		TokenType:    t.TokenType,
 		RefreshToken: t.RefreshToken,
 		Expiry:       t.Expiry,
-		raw:          t.Raw,
+		Raw:          t.Raw,
 	}
 }
 
